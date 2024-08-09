@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class SwipeManager : MonoBehaviour
 {
     public static SwipeManager instance;
@@ -14,12 +13,17 @@ public class SwipeManager : MonoBehaviour
     public float minX = -2.159955f; // ћинимальное значение по оси X
     public float maxX = 1.772743f;  // ћаксимальное значение по оси X
 
+    private Vector3 lastMousePosition = Vector3.zero;
+
     Vector2 TouchPosition() { return (Vector2)Input.mousePosition; }
     bool TouchBegan() { return Input.GetMouseButtonDown(0); }
     bool TouchEnded() { return Input.GetMouseButtonUp(0); }
     bool GetTouch() { return Input.GetMouseButton(0); }
 
-    void Awake() { instance = this; }
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Update()
     {
@@ -32,6 +36,13 @@ public class SwipeManager : MonoBehaviour
     public void SetPlayer(Transform newPlayer)
     {
         player = newPlayer;
+        // ”станавливаем позицию игрока в центр по оси X при установке нового игрока
+        player.position = new Vector3(0, player.position.y, player.position.z);
+    }
+
+    public void ResetSwipe()
+    {
+        lastMousePosition = Vector3.zero;
     }
 
     private void MovePlayerTowardsCursor()
@@ -72,6 +83,3 @@ public class SwipeManager : MonoBehaviour
         return ray.GetPoint(distance);
     }
 }
-
-
-

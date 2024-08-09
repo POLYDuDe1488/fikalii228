@@ -1,65 +1,51 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEditor;
 
-public class GameManager : MonoBehaviour
+public class SwipeManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
+    public static SwipeManager instance;
 
-    private Vector3 lastPlayerPosition;
-    private float lastScore;
+    public float moveSpeed = 10f; // Скорость перемещения игрока
+    public Transform player; // Ссылка на игрока
 
-    private void Awake()
+    public float minX = -2.159955f; // Минимальное значение по оси X
+    public float maxX = 1.772743f;  // Максимальное значение по оси X
+
+    void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        instance = this;
     }
 
-    public void SavePlayerState(Vector3 position, float score)
+    void Update()
     {
-        lastPlayerPosition = position;
-        lastScore = score;
-    }
-
-    public void GameOver()
-    {
-        Debug.Log("Game Over!");
-        Time.timeScale = 0f;
-        ShowGameOverScreen();
-    }
-
-    private void ShowGameOverScreen()
-    {
-        GameObject gameOverScreen = GameObject.Find("GameOverScreen");
-        if (gameOverScreen != null)
+        if (player != null && Input.GetMouseButton(0))
         {
-            gameOverScreen.SetActive(true);
+            MovePlayerTowardsCursor();
         }
     }
 
-    public void RestartGame()
+    private void MovePlayerTowardsCursor()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (player == null) return;
+
+        // Получаем позицию курсора по оси X
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, 0, Camera.main.transform.position.y));
+
+        // Игнорируем перемещение по вертикали и оси Z
+        float targetX = Mathf.Clamp(mousePosition.x, minX, maxX);
+
+        // Перемещаем игрока в направлении курсора по оси X
+        Vector3 newPosition = new Vector3(targetX, player.position.y, player.position.z);
+        player.position = Vector3.MoveTowards(player.position, newPosition, moveSpeed * Time.deltaTime);
     }
 
-    public void Respawn()
+    public void SetPlayer(Transform newPlayer)
     {
-        transform.position = Vector3.zero; // Установите нужную начальную позицию
-        Rigidbody rb = GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.velocity = Vector3.zero; // Сброс скорости игрока
-            rb.angularVelocity = Vector3.zero; // Сброс угловой скорости
-        }
-        Debug.Log("Player respawned at position: " + transform.position);
+        player = newPlayer;
+        // Устанавливаем позицию игрока в центр по оси X при установке нового игрока
+        player.position = new Vector3(0, player.position.y, player.position.z);
     }
-
 }
+

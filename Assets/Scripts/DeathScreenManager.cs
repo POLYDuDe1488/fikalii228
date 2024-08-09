@@ -1,35 +1,56 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEditor;
+using UnityEngine.SceneManagement;  // Подключение библиотеки для работы с SceneManager
+using UnityEngine.UI;  // Подключение библиотеки для работы с UI
 
 public class DeathScreenManager : MonoBehaviour
 {
-    public GameObject deathScreenCanvas; // Ссылка на Canvas для экрана смерти
+    public GameObject deathScreenCanvas;
+    public Button respawnButton; // Кнопка возрождения
 
     void Start()
     {
-        // Скрываем Canvas при старте
         deathScreenCanvas.SetActive(false);
+
+        if (respawnButton != null)
+        {
+            respawnButton.onClick.AddListener(OnRespawnButtonClicked);
+        }
+        else
+        {
+            Debug.LogWarning("Respawn Button is not assigned in the inspector!");
+        }
     }
 
     public void ShowDeathScreen()
     {
-        // Отображаем Canvas экрана смерти
-        deathScreenCanvas.SetActive(true);
-        // Останавливаем время в игре
-        Time.timeScale = 0f;
+        if (deathScreenCanvas != null)
+        {
+            deathScreenCanvas.SetActive(true);
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Debug.LogWarning("DeathScreenCanvas has been destroyed or is not assigned.");
+        }
+    }
+
+    private void OnRespawnButtonClicked()
+    {
+        GameManager.Instance.RespawnPlayer(); // Вызов метода возрождения в GameManager
     }
 
     public void RestartLevel()
     {
-        // Перезапускаем уровень
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        MainCameraManager cameraManager = FindObjectOfType<MainCameraManager>();
+        if (cameraManager != null)
+        {
+            cameraManager.RestartGame();
+        }
     }
 
     public void QuitToMainMenu()
     {
-        // Переход в главное меню
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
