@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class Obstacle : MonoBehaviour
 {
@@ -15,7 +12,7 @@ public class Obstacle : MonoBehaviour
             Debug.LogError("Rigidbody not found on obstacle.");
         }
 
-        rb.isKinematic = true; // Препятствия движутся по скрипту
+        rb.isKinematic = true; // РџСЂРµРїСЏС‚СЃС‚РІРёСЏ РґРІРёР¶СѓС‚СЃСЏ РїРѕ СЃРєСЂРёРїС‚Сѓ
     }
 
     void OnTriggerEnter(Collider other)
@@ -23,8 +20,13 @@ public class Obstacle : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("Obstacle collided with player!");
-            // Вызов метода смерти игрока или остановки игры
-            // Например, gameManager.GameOver();
+            // Р›РѕРіРёРєР° РїСЂРё СЃС‚РѕР»РєРЅРѕРІРµРЅРёРё СЃ РёРіСЂРѕРєРѕРј
         }
+    }
+
+    public void ResetObstacle()
+    {
+        // Р›РѕРіРёРєР° СЃР±СЂРѕСЃР° СЃРѕСЃС‚РѕСЏРЅРёСЏ РїСЂРµРїСЏС‚СЃС‚РІРёСЏ (РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё)
+        Debug.Log("Obstacle has been reset.");
     }
 }
