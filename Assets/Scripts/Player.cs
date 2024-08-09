@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class Player : MonoBehaviour
 {
@@ -16,7 +13,7 @@ public class Player : MonoBehaviour
             Debug.LogError("Rigidbody not found on player.");
         }
 
-        // Найти DeathScreenManager
+        // РќР°Р№С‚Рё DeathScreenManager
         deathScreenManager = GameObject.FindObjectOfType<DeathScreenManager>();
         if (deathScreenManager == null)
         {
@@ -29,13 +26,23 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Obstacle"))
         {
             Debug.Log("Player collided with an obstacle!");
-            // Вызов метода ShowDeathScreen у deathScreenManager
             if (deathScreenManager != null)
             {
                 deathScreenManager.ShowDeathScreen();
             }
         }
     }
+
+    public void ResetPlayer()
+    {
+        // РЎР±СЂРѕСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ РёРіСЂРѕРєР°
+        transform.position = Vector3.zero;
+        transform.rotation = Quaternion.identity;
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        Debug.Log("Player has been reset.");
+    }
 }
-
-
