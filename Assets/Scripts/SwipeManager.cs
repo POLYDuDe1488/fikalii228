@@ -29,6 +29,11 @@ public class SwipeManager : MonoBehaviour
         }
     }
 
+    public void SetPlayer(Transform newPlayer)
+    {
+        player = newPlayer;
+    }
+
     private void MovePlayerTowardsCursor()
     {
         if (player == null) return;

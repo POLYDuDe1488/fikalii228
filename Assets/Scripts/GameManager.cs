@@ -50,27 +50,16 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void RespawnPlayer()
+    public void Respawn()
     {
-        Time.timeScale = 1f;
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player != null)
+        transform.position = Vector3.zero; // ”становите нужную начальную позицию
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
         {
-            player.transform.position = lastPlayerPosition;
-            player.GetComponent<Player>().Respawn();
-            SwipeManager.instance.SetPlayer(player.transform);
+            rb.velocity = Vector3.zero; // —брос скорости игрока
+            rb.angularVelocity = Vector3.zero; // —брос угловой скорости
         }
-
-        ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
-        if (scoreManager != null)
-        {
-            scoreManager.SetScore(lastScore);
-        }
-
-        GameObject gameOverScreen = GameObject.Find("GameOverScreen");
-        if (gameOverScreen != null)
-        {
-            gameOverScreen.SetActive(false);
-        }
+        Debug.Log("Player respawned at position: " + transform.position);
     }
+
 }

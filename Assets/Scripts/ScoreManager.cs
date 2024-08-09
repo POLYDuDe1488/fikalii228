@@ -69,6 +69,11 @@ public class ScoreManager : MonoBehaviour
             isSkybox1500Changed = true;
         }
     }
+    public void SetScore(float newScore)
+    {
+        score = newScore;
+        UpdateScoreText(); // Обновите текст на экране, если это необходимо
+    }
 
     void UpdateScoreText()
     {
